@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import os 
+import sys
+import re
+import subprocess
+from urlparse import parse_qs, urlparse
+import logging
+import logging.handlers
+
+RE_SCHEME = r"x-(?:[a-z0-9]+\-)*?[a-z0-9]+"
+RE_KEY = r"[A-Za-z0-9]+"
+RE_NETLOC = r"[A-Za-z0-9_][A-Za-z0-9_\-]*"
+            
+def _log_error(msg):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    log_file = os.path.join(dir_path, 'debug.log')
+    with open(log_file, 'w') as f:
+        msg = msg + "\n"
+        f.write(msg.encode('utf-8'))
+        
+def main():
+    _log_error("Starting")
+    raw_url = sys.argv[1] if len(sys.argv) > 1 else 'x-test1-url://hello2'
+    url = urlparse(raw_url)
+
+    # Check scheme & path
+    
+    if not re.match(RE_SCHEME, url.scheme):
+        msg = "Invalid scheme: {}".format(url.scheme)
+        _log_error(msg)
+        raise Exception(msg)
+
+    if not re.match(RE_NETLOC, url.netloc):
+        msg = "Invalid action name: {}".format(url.netloc)
+        _log_error(msg)
+        raise Exception(msg)
+    
+    arguments = parse_qs(url.query, keep_blank_values=True, strict_parsing=True) if url.query else {}
+
+    base_dir = os.path.expanduser('~/Library/Application Support/URLSchemeHandler')
+    script = os.path.join(base_dir, url.scheme, url.netloc)
+    
+    if not os.path.isfile(script):
+        msg = "No such file: {}".format(script)
+        _log_error(msg)
+        raise Exception(msg)
+        
+    arglist = [script]
+    for key, value in arguments.iteritems():
+        if not re.match(RE_KEY, key):
+            msg = "Invalid key: {}".format(key)
+            _log_error(msg)
+            raise Exception(msg)
+        arglist.append("{}{}".format("-" if len(key)==1 else "--", key))
+        # value is a (possibly empty) list
+        # If multiple values supplier for 
+        if value:
+            arglist.append(value[0])
+    
+    _log_error("OK: "+str(arglist))
+    subprocess.call(arglist)
+
+if __name__ == '__main__':
+    main()
