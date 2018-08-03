@@ -28,10 +28,7 @@
 			<key>CFBundleURLName</key>
 			<string>URL scheme handler</string>
 			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>x-test1-url</string>
-				<string>x-test2-url</string>
-			</array>
+			<array/>
 		</dict>
 	</array>
 	<key>LSMinimumSystemVersionByArchitecture</key>
@@ -56,7 +53,7 @@
 		<key>positionOfDivider</key>
 		<real>673</real>
 		<key>savedFrame</key>
-		<string>946 493 921 924 0 0 2560 1417 </string>
+		<string>300 33 921 844 0 0 1440 877 </string>
 		<key>selectedTab</key>
 		<string>log</string>
 	</dict>

@@ -1,0 +1,85 @@
+#!/usr/bin/env osascript
+
+on run args
+	set thePListPath to first item of args
+	set theURLSchemeRef to getURLSchemesRef(thePListPath)
+	-- Make a new selection
+	set theSchemes to chooseSchemesToActivate(listAvailableSchemes())
+	if theSchemes is false then
+		return
+	end
+	setURLSchemes(theURLSchemeRef, theSchemes)
+end thePListPath
+
+on listAvailableSchemes()
+	set appSupportFolder to alias ((path to application support from user domain as text) & "URLSchemeHandler")
+	tell application "Finder"
+		set theSchemes to name of every folder in folder appSupportFolder
+	end
+	return theSchemes
+end
+
+on chooseSchemesToActivate(theSchemes)
+	set theResult to choose from list theSchemes with prompt "Please select URL-schemes to activate:" default items theSchemes multiple selections allowed true empty selection allowed true OK button name "Activate Selected" 
+
+	if theResult is false then
+		display dialog "No changes made" with icon caution buttons {"OK"} default button 1
+	else if theResult is {} then
+		display alert "All URL-schemes disabled"
+	else 
+		display alert "Activating: " & listToDelimitedString(theResult, ", ")
+	end
+	return theResult
+end
+
+on listToDelimitedString(theList, theDelimiter)
+	set theItemCount to count theList
+	set theString to ""
+	repeat with i from 1 to theItemCount
+		set theString to theString & item i of theList
+		if i < theItemCount then
+			set theString to theString & theDelimiter
+		end
+	end
+	return theString
+end
+	
+on getURLSchemesRef(theFilePath)
+	tell application "System Events"
+			tell property list file theFilePath  
+				tell property list item "CFBundleURLTypes"
+					tell first property list item
+						set theURLSchemesRef to its property list item "CFBundleURLSchemes"
+					end
+				end tell
+		end tell
+	end tell
+	return theURLSchemesRef 
+end
+
+on getURLSchemes(theRef)
+	using terms from application "System Events"
+		return value of theRef
+	end 
+end
+
+on setURLSchemes(theRef, theValue)
+	using terms from application "System Events"
+		set value of theRef to unique(theValue)
+	end 
+end
+
+on appendURLSchemes(theRef, theSchemes)
+	set x to getURLSchemes(theRef) & theSchemes
+	setURLSchemes(theRef, x)
+end
+
+on unique(theList)
+    set resultList to {} 
+    repeat with i from 1 to count of items of theList 
+      	if item i of theList is not in resultList then 
+			set resultList to resultList & item i of theList 
+      	end if 
+    end repeat
+	return resultList
+end
