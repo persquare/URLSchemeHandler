@@ -9,13 +9,13 @@
 	<key>CFBundleExecutable</key>
 	<string>applet</string>
 	<key>CFBundleIconFile</key>
-	<string>applet</string>
+	<string>if_Direction_Board_381624</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.apple.ScriptEditor.id.url-scheme-handler</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>url_scheme_handler</string>
+	<string>URLSchemeHandler</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -51,9 +51,9 @@
 		<key>name</key>
 		<string>ScriptWindowState</string>
 		<key>positionOfDivider</key>
-		<real>673</real>
+		<real>626</real>
 		<key>savedFrame</key>
-		<string>300 33 921 844 0 0 1440 877 </string>
+		<string>300 80 921 797 0 0 1440 877 </string>
 		<key>selectedTab</key>
 		<string>log</string>
 	</dict>

@@ -1,14 +1,17 @@
 #!/usr/bin/env osascript
 
+property theIconName : "if_Direction_Board_381624" 
+
 on run args
 	set thePListPath to first item of args
 	set theURLSchemeRef to getURLSchemesRef(thePListPath)
 	-- Make a new selection
 	set theSchemes to chooseSchemesToActivate(listAvailableSchemes())
 	if theSchemes is false then
-		return
+		return false
 	end
 	setURLSchemes(theURLSchemeRef, theSchemes)
+	return true
 end thePListPath
 
 on listAvailableSchemes()
@@ -23,13 +26,18 @@ on chooseSchemesToActivate(theSchemes)
 	set theResult to choose from list theSchemes with prompt "Please select URL-schemes to activate:" default items theSchemes multiple selections allowed true empty selection allowed true OK button name "Activate Selected" 
 
 	if theResult is false then
-		display dialog "No changes made" with icon caution buttons {"OK"} default button 1
+		set theMessage to "No changes made"
 	else if theResult is {} then
-		display alert "All URL-schemes disabled"
+		set theMessage to "All URL-schemes disabled"
 	else 
-		display alert "Activating: " & listToDelimitedString(theResult, ", ")
+		set theMessage to "Activating: " & listToDelimitedString(theResult, ", ")
 	end
+	informativeDialog(theMessage, 5)
 	return theResult
+end
+
+on informativeDialog(theMessage, theTimeOut)
+	display dialog theMessage with icon theIconName buttons {"OK"} default button 1 giving up after theTimeOut
 end
 
 on listToDelimitedString(theList, theDelimiter)
