@@ -5,7 +5,7 @@ Automation helper that manages URL-schemes and handler scripts for URL-scheme ac
 ## The App
 
 The core is a minimal AppleScript application that registers as the handler for URL-schemes.  
-The generic form of invocation is `<url-scheme>/<action>?<key>=<value>&...`  
+The generic form of invocation is `<url-scheme>://<action>?<key>=<value>&...`  
 URL-schemes are added to the Info.plist file (self-modifying code, yikes).   
 Handlers must be placed in `~/Library/Application Support/URLSchemeHandler/<url-scheme>/<action>` as executable scripts.
 
